@@ -13,13 +13,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// JsonResult 返回结构
-type JsonResult struct {
-	Code     int         `json:"code"`
-	ErrorMsg string      `json:"errorMsg,omitempty"`
-	Data     interface{} `json:"data"`
-}
-
 // IndexHandler 计数器接口
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	data, err := getIndex()

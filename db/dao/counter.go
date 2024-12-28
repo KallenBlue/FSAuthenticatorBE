@@ -2,8 +2,15 @@ package dao
 
 import (
 	"wxcloudrun-golang/db"
+	interf "wxcloudrun-golang/db/dao/interface"
 	"wxcloudrun-golang/db/model"
 )
+
+// CounterInterfaceImp 计数器数据模型实现
+type CounterInterfaceImp struct{}
+
+// Imp 实现实例
+var Imp interf.CounterInterface = &CounterInterfaceImp{}
 
 const tableName = "Counters"
 
