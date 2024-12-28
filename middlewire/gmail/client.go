@@ -33,16 +33,18 @@ func Init() {
 	}
 }
 
-func GetEmailCode(email string) string {
+func GetEmailCode(email string) (string, error) {
 	srv, ok := GmailServerMap[email]
 	if !ok {
-		return ""
+		fmt.Printf("Email %s not found in the credential list.\n", email)
+		return "", fmt.Errorf("Email %s not found in the credential list.\n", email)
 	}
 	// Get the list of messages
 	user := "me"
 	r, err := srv.Users.Messages.List(user).MaxResults(10).Do()
 	if err != nil {
-		return ""
+		fmt.Printf("An error occurred while retrieving messages: %v\n", err)
+		return "", err
 	}
 	// Filter messages
 	fmt.Println("Filtering emails...")
@@ -50,7 +52,8 @@ func GetEmailCode(email string) string {
 		// Get full email details
 		msg, err := srv.Users.Messages.Get(user, m.Id).Format("full").Do()
 		if err != nil {
-			return ""
+			fmt.Printf("An error occurred while retrieving a message: %v\n", err)
+			return "", err
 		}
 
 		// Get the subject
@@ -71,14 +74,14 @@ func GetEmailCode(email string) string {
 				matches := re.FindStringSubmatch(subject)
 				if len(matches) > 1 {
 					fmt.Printf("Found verification code: %s\n", matches[1])
-					return matches[1]
+					return matches[1], nil
 				} else {
 					fmt.Println("Verification code not found in subject.")
 				}
 			}
 		}
 	}
-	return ""
+	return "", nil
 }
 
 func getGmailService(credential model.GmailCredential) (*gmail.Service, error) {

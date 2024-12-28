@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"wxcloudrun-golang/middlewire/gmail"
 )
@@ -26,10 +27,10 @@ func GmailCodeHandler(w http.ResponseWriter, r *http.Request) {
 		CommonResponse(w, res)
 		return
 	}
-	code := gmail.GetEmailCode(email)
+	code, err := gmail.GetEmailCode(email)
 	if code == "" {
 		res.Code = 200
-		res.ErrorMsg = "code is empty"
+		res.ErrorMsg = fmt.Sprintf("code is empty, err: %v", err)
 		CommonResponse(w, res)
 		return
 	}
